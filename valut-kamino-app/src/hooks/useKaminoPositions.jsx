@@ -58,22 +58,48 @@ export default function useKaminoPositions(walletAddress) {
     setError(null);
 
     try {
-      const res = await fetch(
-        PROXY_API(`https://api.kamino.finance/v2/users/${walletAddress}/obligations`)
-      );
+       const kaminoUrl = `https://api.kamino.finance/v2/users/${walletAddress}/obligations`;
+      const proxyUrl = PROXY_API(kaminoUrl);
 
-      if (!res.ok) {
-        if (res.status === 404) {
+      let res;
+      let responseSource = 'proxy';
+      let proxyStatus = null;
+      try {
+        res = await fetch(proxyUrl);
+        proxyStatus = res.status;
+      } catch (proxyErr) {
+        console.warn('Proxy request failed, attempting direct Kamino request.', proxyErr);
+      }
+
+      // If proxy fails or returns a non-OK status, try direct Kamino API as fallback.
+      // This avoids false "No positions found" states when the proxy layer is misconfigured.
+      if (!res || !res.ok) {
+        try {
+          const directRes = await fetch(kaminoUrl);
+          if (directRes.ok) {
+            res = directRes;
+            responseSource = 'direct';
+          }
+        } catch (directErr) {
+          console.warn('Direct Kamino request failed.', directErr);
+        }
+      }
+
+      if (!res || !res.ok) {
+        if (res?.status === 404) {
           setPositions([]);
           setPortfolioValue(0);
           setOverallHealth(null);
           setLoading(false);
           return;
         }
-        throw new Error(`Kamino API returned ${res.status}`);
+        throw new Error(
+          `Unable to load Kamino positions (proxy status: ${proxyStatus ?? 'network error'}).`
+        );
       }
 
       const data = await res.json();
+      console.info(`Loaded Kamino obligations via ${responseSource} endpoint.`);
       const obligations = Array.isArray(data) ? data : (data.obligations || data.data || []);
 
       if (obligations.length === 0) {
