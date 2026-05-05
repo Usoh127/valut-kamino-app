@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=DM+Sans:wght@300;400;500;600&display=swap');
+@import '@solana/wallet-adapter-react-ui/styles.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+  font-family: 'DM Sans', system-ui, -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background-color: #F5F6FA;
+  color: #0D0D1A;
+}
+
+.wallet-adapter-dropdown { z-index: 50; }
+.wallet-adapter-modal-wrapper { z-index: 50; }
+
+.wallet-adapter-button {
+  background-color: #1E1E35 !important;
+  border-radius: 12px !important;
+  font-weight: 600 !important;
+  font-family: 'DM Sans', system-ui, sans-serif !important;
+  height: 44px !important;
+  padding: 0 20px !important;
+  font-size: 14px !important;
+}
+
+.wallet-adapter-button:hover {
+  background-color: #0D0D1A !important;
+}
+
+.wallet-adapter-button-trigger {
+  background-color: #1E1E35 !important;
+}
+
+/* Override "Select Wallet" text to "Connect Wallet" */
+.wallet-adapter-button-trigger {
+  font-size: 0 !important;
+}
+.wallet-adapter-button-trigger::after {
+  content: 'Connect Wallet';
+  font-size: 14px;
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
+/* Restore normal text when wallet is connected (shows address) */
+.wallet-adapter-button:not(.wallet-adapter-button-trigger) {
+  font-size: 14px !important;
+}
+.wallet-adapter-button-trigger .wallet-adapter-button-start-icon + span {
+  font-size: 0;
+}
+.wallet-adapter-button-trigger .wallet-adapter-button-start-icon + span::after {
+  content: 'Connect Wallet';
+  font-size: 14px;
+  font-family: 'DM Sans', system-ui, sans-serif;
+}
