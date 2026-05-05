@@ -59,9 +59,11 @@ export default function ConnectScreen({ onDemo, onPublicAddress }) {
           onClick={() => setVisible(true)}
           className="w-full mb-3 inline-flex items-center justify-center gap-2 bg-[#1E1E35] text-white font-semibold font-sans text-sm rounded-[12px] px-5 py-3.5 hover:bg-[#0D0D1A] transition-colors"
         >
-          Connect Wallet
+          Connect with Solflare
         </button>
-
+        <p className="mb-2 font-sans text-[11px] text-vault-muted">
+          Read-only portfolio access. Vault never requests transaction approval.
+        </p>
         {/* Divider */}
         <div className="flex items-center gap-3 my-4">
           <div className="flex-1 h-px bg-vault-border" />
