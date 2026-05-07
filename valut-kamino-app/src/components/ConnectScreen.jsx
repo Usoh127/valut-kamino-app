@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
+import { PublicKey } from '@solana/web3.js';
 import { useWalletModal } from '@solana/wallet-adapter-react-ui';
 import { BarChart3, AlertTriangle, Eye } from 'lucide-react';
-
-const BASE58_REGEX = /^[1-9A-HJ-NP-Za-km-z]{32,44}$/;
 
 export default function ConnectScreen({ onDemo, onPublicAddress }) {
   const { setVisible } = useWalletModal();
@@ -15,14 +14,16 @@ export default function ConnectScreen({ onDemo, onPublicAddress }) {
       setAddressError('Invalid Solana address');
       return;
     }
-    if (!BASE58_REGEX.test(trimmed)) {
+    try {
+      const normalizedAddress = new PublicKey(trimmed).toBase58();
+      setAddressError('');
+      onPublicAddress(normalizedAddress);
+    } catch {
       setAddressError('Invalid Solana address');
-      return;
-    }
-    setAddressError('');
-    onPublicAddress(trimmed);
+      
+  }
   };
-
+    
   const handleInputChange = (e) => {
     setAddressInput(e.target.value);
     if (addressError) setAddressError('');
