@@ -265,6 +265,13 @@ export default function PortfolioOverview({ positions, loading, error, portfolio
           <EmptyState />
         ) : (
           <>
+            {error && (
+              <div className="mb-4 flex items-start gap-3 rounded-2xl border border-health-risk/20 bg-health-risk/5 p-4">
+                <AlertTriangle className="w-4 h-4 text-health-risk flex-shrink-0 mt-0.5" />
+                <p className="text-sm text-vault-text">{error}</p>
+              </div>
+            )}
+
             {overallHealth && (
               <div className={`mb-6 rounded-2xl border p-5 ${
                 overallHealth.color === 'safe' ? 'bg-health-safe/5 border-health-safe/20' :
